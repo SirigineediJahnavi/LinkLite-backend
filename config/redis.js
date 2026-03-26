@@ -1,7 +1,7 @@
 const { createClient } = require("redis")
 
 const c = createClient({
-  url: process.env.REDIS_URL,
+  url: process.env.REDIS_URL
 })
 
 c.connect()
