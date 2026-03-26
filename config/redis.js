@@ -1,6 +1,13 @@
-const {createClient}=require("redis")
+const { createClient } = require("redis")
 
-const r=createClient({url:process.env.REDIS_URL})
-r.connect()
+const c = createClient({
+  url: process.env.REDIS_URL,
+  socket: {
+    tls: true,
+    rejectUnauthorized: false
+  }
+})
 
-module.exports=r
+c.connect()
+
+module.exports = c
