@@ -3,32 +3,33 @@ const {nanoid}=require("nanoid")
 const r=require("../config/redis")
 const QRCode=require("qrcode")
 
-exports.shorten=async(req,res)=>{
-  try{
-    const {url}=req.body
-    if(!url) return res.status(400).json({msg:"url required"})
+exports.shorten = async (req, res) => {
+  try {
+    const { url } = req.body
+    if (!url) return res.status(400).json({ msg: "url required" })
 
-    let id,u
+    let id, u
 
-    while(true){
-      id=nanoid(6)
-      try{
-        u=await Url.create({o:url,s:id})
+    while (true) {
+      id = nanoid(6)
+      try {
+        u = await Url.create({ o: url, s: id })
         break
-      }catch(e){
-        if(e.code!==11000) throw e
+      } catch (e) {
+        if (e.code !== 11000) throw e
       }
     }
 
-    const short=`http://localhost:3001/${id}`
+    const short = `https://linklite-backend-jahnavi.onrender.com/${id}`
 
-    await r.set(id,url)
+    await r.set(id, url)
 
-    const qr=await QRCode.toDataURL(short)
+    const qr = await QRCode.toDataURL(short)
 
-    res.json({short,qr})
-  }catch(e){
-    res.status(500).json({msg:"error"})
+    res.json({ short, qr })
+  } catch (e) {
+    console.log(e)  // <-- Add this to see the real error in Render logs
+    res.status(500).json({ msg: "error" })
   }
 }
 
